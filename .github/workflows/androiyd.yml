@@ -1,8 +1,12 @@
-name: Build APK
+name: Build Flutter APK
 
 on:
   push:
-    branches: [ "master" ]
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
   workflow_dispatch:
 
 jobs:
@@ -10,27 +14,45 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      # ✅ Checkout code
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
+      # ✅ Setup Java
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
+          cache: 'gradle'
 
+      # ✅ Setup Flutter (Latest Stable)
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.19.0'   # ✅ version explicitly
+          channel: 'stable'
+          cache: true
 
-      - name: Get Dependencies
+      # ✅ Show Flutter Version (Debug Purpose)
+      - name: Flutter Version
+        run: flutter --version
+
+      # ✅ Get Dependencies
+      - name: Install Dependencies
         run: flutter pub get
 
-      - name: Build Release APK
-        run: flutter build apk --release
+      # ✅ Clean Build (Sometimes fixes version errors)
+      - name: Clean Project
+        run: flutter clean
 
+      # ✅ Build APK
+      - name: Build Release APK
+        run: flutter build apk --release --verbose
+
+      # ✅ Upload APK Artifact
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
+          if-no-files-found: error
