@@ -6,6 +6,7 @@ allprojects {
 }
 
 rootProject.buildDir = "../build"
+
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
 }
@@ -14,7 +15,8 @@ subprojects {
     afterEvaluate { project ->
         if (project.hasProperty("android")) {
             project.android {
-                compileSdkVersion 36
+                // ✅ Use safe compile SDK version
+                compileSdkVersion 33
             }
         }
     }
