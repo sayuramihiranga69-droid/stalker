@@ -1,49 +1,34 @@
-/* 
+/*
  * Stalker
- * Copyright (C) 2025 Andreno
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ * Clean Version – Shizuku Removed
  */
 
-import 'package:flutter/services.dart';
+/// ✅ Dummy Bridge API
+/// This replaces the old Shizuku method channel.
+/// All functions now return safe default values.
 
 class BridgeApi {
-  static const _channel = MethodChannel('com.onerdna.stalker/shizuku');
+  /// Always return false (No binder service)
+  static Future<bool?> pingBinder() async => false;
 
-  static Future<bool?> pingBinder() async {
-    return await _channel.invokeMethod("pingBinder");
-  }
-
+  /// No permission handling needed anymore
   static Future<void> requestPermission(int requestCode) async {
-    await _channel.invokeMethod("requestPermission", {
-      "requestCode": requestCode,
-    });
+    return;
   }
 
-  static Future<bool?> checkPermission() async {
-    return await _channel.invokeMethod("checkPermission");
-  }
+  /// Always return true (Permission assumed)
+  static Future<bool?> checkPermission() async => true;
 
+  /// ❌ Command execution removed
   static Future<String?> runCommand(String command) async {
-    return await _channel.invokeMethod("runCommand", {"command": command});
+    return null;
   }
 
-  static Future<bool> isBinderServiceAvailable() async {
-    return await _channel.invokeMethod("isBinderServiceAvailable");
-  }
+  /// Binder service not supported anymore
+  static Future<bool> isBinderServiceAvailable() async => false;
 
+  /// Binder service not supported
   static Future<String> startBinderService() async {
-    return await _channel.invokeMethod("startBinderService");
+    return "Not supported";
   }
 }
